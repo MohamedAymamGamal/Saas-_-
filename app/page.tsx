@@ -5,7 +5,7 @@ import React from 'react'
 import CTA from '@/components/CTA'
 const Page = () => {
   return (
-    <main className='text-2l underline '>
+    <main className='text-2l  '>
       <h1 className='text-3xl font-bold'>
         Popular Compaions
       </h1>
@@ -43,7 +43,7 @@ const Page = () => {
 
       </section>
       <section className='home-section'>
-        <CompanionsList />
+        <CompanionsList title={''} />
         <CTA />
       </section>
     </main>
