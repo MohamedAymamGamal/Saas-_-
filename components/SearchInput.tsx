@@ -4,7 +4,7 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { formUrlQuery } from "@jsmastery/utils";
+import { formUrlQuery, removeKeysFromUrlQuery } from "@jsmastery/utils";
 const SearchInput = () => {
     const pathname = usePathname();
     const router = useRouter();
@@ -12,15 +12,26 @@ const SearchInput = () => {
     const search = searchParams.get("topic") || "";
     const [searchQuery, setSearchQuery] = useState('');
     useEffect(() => {
-        if(searchQuery){
-            const newUrl = formUrlQuery({
-                params: searchParams.toString(),
-                key: "topic",
-                value: searchQuery
-            });
-            router.push(newUrl,{scroll: false});
+        const delayDebounceFn = setTimeout(() => {
+            if (searchQuery) {
+                const newUrl = formUrlQuery({
+                    params: searchParams.toString(),
+                    key: "topic",
+                    value: searchQuery
+                });
+                router.push(newUrl, { scroll: false });
 
-        }
+            } else {
+                if (pathname === '/companions') {
+                    const newUrl = removeKeysFromUrlQuery({
+                        params: searchParams.toString(),
+                        keysToRemove: ['topic']
+                    });
+                    router.push(newUrl, { scroll: false })
+                }
+            }
+        },500)
+
     }, [pathname, searchQuery, searchParams, router]);
     return (
         <div className='relative border border-black gap-2 px-2 py-1 h-fit rounded-lg items-center flex'
@@ -43,7 +54,7 @@ const SearchInput = () => {
                     }
                 }}
             />
-            
+
         </div>
     )
 }
